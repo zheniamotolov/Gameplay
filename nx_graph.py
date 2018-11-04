@@ -1,91 +1,88 @@
+from itertools import count
+import tkinter as tk
 from tkinter import filedialog
 import json
 import networkx as nx
 import matplotlib.pyplot as plt
-import pygraphviz as pgv
-from IPython.display import Image
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from rx.subjects import Subject, BehaviorSubject
+from sys import exit
 
-def read_graph_from_file(filename):
+def graph_from_file(filename):
     graph = nx.Graph()
     with open(filename, 'r') as fp:
         data = json.load(fp)
-#     for point in data['points']: # graph vertexes can be set just via lines
-#         graph.add_node(point['idx'])
+    for point in data['points']:
+        graph.add_node(point['idx'])
     for line in data['lines']:
         from_idx, to_idx = line['points']
         graph.add_edge(from_idx, to_idx, weight=line['length'])
     return graph
 
-def show_planar_embedding_of_graph():
-    global graph
-    if(nx.check_planarity(graph)[0]):
-        A=pgv.AGraph()
-        A.node_attr['shape']='circle'
-        A.node_attr['style']='filled'
-        A.node_attr['color']='red'
-        A.add_edges_from(graph.edges())
-        A.layout(prog='dot')
-        A.draw('planar.png')
-        display(Image('planar.png'))
-    else:
-        print('graph in not planar')
-    
-def export_graph_to_file(graph, filename):
+def graph_to_file(filename, graph):
     points = [{'idx': node, 'post_idx': None} for node in graph.nodes]
     lines = [{'idx': idx, 'length': 1, 'points': [x, y]} for idx, (x, y) in zip(count(1), graph.edges)]
     data = {'points': points, 'lines': lines}
     with open(filename, 'w') as fp:
         json.dump(data, fp)
 
-def export_handler():
-    global graph
+def ask_export_filename():
     filetypes = [('JSON', '*.json'), ('All Files', '*')]
     filename = filedialog.asksaveasfile(filetypes=filetypes).name
-    export_graph_to_file(graph, filename)
+    return filename
 
-def draw():
-    global graph
+def draw(canvas, G):
     plt.clf()
-    nx.draw(graph,with_labels=True,node_size=1500)
-    plt.show()
+    nx.draw(G, layout=nx.spring_layout(G))
+    canvas.draw()
 
-
-def open_file_handler():
+def ask_import_filename():
     filetypes = [('JSON', '*.json'), ('All Files', '*')]
     filename = filedialog.askopenfile(filetypes=filetypes).name
-    global graph
-    graph = read_graph_from_file(filename)
-    draw()
+    return filename
 
 
-def cube():
-    global graph
-    graph = nx.cubical_graph()
-    draw()
+class GraphViewer():
+    def __init__(self, parent):
+        f = plt.figure(figsize=(5, 4), dpi=100)
+        self._parent = parent
+        self._canvas = FigureCanvasTkAgg(f, master=parent)
+        self._canvas.get_tk_widget().pack()
 
-def complete():
-    global graph
-    graph = nx.complete_graph(5)
-    draw()
+    def on_next(self, G):
+        draw(self._canvas, G)
 
-def cycle():
-    global graph
-    graph = nx.cycle_graph(7)
-    draw()
-    
-def hyper4d():
-    global graph
-    graph = nx.hypercube_graph(4)
-    draw()
+    def on_error(self, err):
+        print('error in drawing', err)
+        self._parent.quit()
+    def on_complete(self):
+        pass
 
-if __name__ == '__main__':
-    graph = None # is global var really good practiece?
-    tk.Button(text='Vizualize graph from json file', command=open_file_handler).pack()
-    tk.Button(text='Vizualize planar embedding of graph', command=show_planar_embedding_of_graph).pack()
-    tk.Button(text='Export', command=export_handler).pack()
-    tk.Button(text='Cube', command=cube).pack()
-    tk.Button(text='Cycle', command=cycle).pack()
-    tk.Button(text='Complete', command=complete).pack()
-    tk.Button(text='4D hypercube', command=hyper4d).pack()
+
+def main():
+    G = BehaviorSubject(nx.Graph())
+    import_filename = Subject()
+    export_filename = Subject()
+    import_filename.map(graph_from_file).subscribe(G)
+    root = tk.Tk()
+    graph_viewer = GraphViewer(root)
+    G.subscribe(graph_viewer)
+    pair = export_filename.with_latest_from(G, lambda x, y: (x, y))
+    pair.subscribe(lambda pair: graph_to_file(pair[0], pair[1]))
+    def import_handler():
+        import_filename.on_next(ask_import_filename())
+
+    def export_handler():
+        export_filename.on_next(ask_export_filename())
+
+    root.wm_protocol('WM_DELETE_WINDOW', exit)
+    menubar = tk.Menu(root)
+    filemenu = tk.Menu(menubar)
+    filemenu.add_command(label='Import', command=import_handler)
+    filemenu.add_command(label='Export', command=export_handler)
+    menubar.add_cascade(label='File', menu=filemenu)
+    root.config(menu=menubar)
     tk.mainloop()
 
+if __name__ == '__main__':
+    main()
