@@ -21,7 +21,7 @@ class GraphViewer:
         self.layout = BehaviorSubject(nx.spring_layout)
         self._G = Subject()
 
-        def draw(G, x_center, y_center, k, layout):
+        def draw(nodes, edges, x_center, y_center, k):
             def scale(x, y):
                 width = self._canvas.winfo_width()
                 height = self._canvas.winfo_height()
@@ -30,8 +30,7 @@ class GraphViewer:
                 y = height * y_center + size * y * k
                 return x, y
             self._canvas.delete('all')
-            nodes = layout(G)
-            for from_, to in G.edges:
+            for from_, to in edges:
                 x_from, y_from = scale(*nodes[from_])
                 x_to, y_to = scale(*nodes[to])
                 self._canvas.create_line(x_from, y_from, x_to, y_to)
@@ -39,8 +38,9 @@ class GraphViewer:
                 x, y = scale(x, y)
                 self._canvas.create_oval(x - 5, y - 5, x + 5, y + 5, fill='red')
 
-        wrap = lambda *args: args
-        redraw = self._G.combine_latest(self.x_center, self.y_center, self._k, self.layout, draw)
+        nodes = self._G.combine_latest(self.layout, lambda G, f: f(G))
+        edges = self._G.map(lambda G: G.edges)
+        redraw = nodes.combine_latest(edges, self.x_center, self.y_center, self._k, draw)
         redraw.subscribe()
 
 
