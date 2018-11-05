@@ -1,4 +1,3 @@
-from itertools import count
 import tkinter as tk
 import networkx as nx
 from rx.subjects import BehaviorSubject
@@ -14,9 +13,10 @@ def main():
     root.wm_protocol('WM_DELETE_WINDOW', root.quit)
     menubar = tk.Menu(root, tearoff=0)
     menus.file(menubar, G)
-    menus.graphs(menubar,G)
+    menus.graphs(menubar, G)
     root.config(menu=menubar)
     tk.mainloop()
+
 
 if __name__ == '__main__':
     main()

@@ -4,22 +4,34 @@ from rx.subjects import Subject
 from serialization import graph_to_file, graph_from_file
 import networkx as nx
 
+
 def ask_export_filename():
+    filename = None
     filetypes = [('JSON', '*.json'), ('All Files', '*')]
-    filename = filedialog.asksaveasfile(filetypes=filetypes).name
+    filepath = filedialog.asksaveasfile(filetypes=filetypes)
+    if filepath:
+        filename = filepath.name
+        filepath.close()
     return filename
 
 
 def ask_import_filename():
+    filename = None
     filetypes = [('JSON', '*.json'), ('All Files', '*')]
-    filename = filedialog.askopenfile(filetypes=filetypes).name
+    filepath = filedialog.askopenfile(filetypes=filetypes)
+    if filepath:
+        filename = filepath.name
+        filepath.close()
     return filename
 
 
 def file(parent, G):
     import_filename = Subject()
     export_filename = Subject()
-    import_filename.map(graph_from_file).subscribe(G)
+    import_filename \
+        .map(graph_from_file) \
+        .filter(lambda i: i is not None) \
+        .subscribe(G)
     pair = export_filename.with_latest_from(G, lambda x, y: (x, y))
     pair.subscribe(lambda pair: graph_to_file(pair[1], pair[0]))
 
@@ -48,7 +60,7 @@ def graphs(parent, G):
 
     def complete_handler():
         G.on_next(nx.complete_graph(5))
-    
+
     menu = tk.Menu(parent)
     menu.add_command(label='Cubical', command=cubical_handler)
     menu.add_command(label='Hypercube', command=hypercube_handler)
