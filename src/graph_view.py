@@ -39,8 +39,6 @@ class GraphViewer:
 
     def on_next(self, G):
         self._G.on_next(G)
-        self.x_center.on_next(0.5)
-        self.y_center.on_next(0.5)
 
     def on_error(self, err):
         print('error in drawing', err)
