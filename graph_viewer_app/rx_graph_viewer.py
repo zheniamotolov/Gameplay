@@ -82,6 +82,10 @@ def main():
     filemenu.add_command(label='Export', command=export_handler)
     menubar.add_cascade(label='File', menu=filemenu)
     root.config(menu=menubar)
+    # tk.Button(root, text='Cube', command=cube).pack(side='left')
+    # tk.Button(root, text='Cycle', command=cycle).pack(side='left')
+    # tk.Button(root, text='Complete', command=complete).pack(side='left')
+    # tk.Button(root, text='4D hypercube', command=hyper4d).pack(side='left')
     tk.mainloop()
 
 if __name__ == '__main__':
