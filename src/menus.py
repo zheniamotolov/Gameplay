@@ -56,3 +56,17 @@ def graphs(parent, G):
     menu.add_command(label='Cycle', command=cycle_handler)
     parent.add_cascade(label='Graphs', menu=menu)
     return menu
+
+
+def view(parent, widget):
+    def zoom_in_handler():
+        widget.zoom.on_next(2)
+
+    def zoom_out_handler():
+        widget.zoom.on_next(0.5)
+
+    menu = tk.Menu(parent)
+    menu.add_command(label='Zoom In', command=zoom_in_handler)
+    menu.add_command(label='Zoom Out', command=zoom_out_handler)
+    parent.add_cascade(label='View', menu=menu)
+    return menu
