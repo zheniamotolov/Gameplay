@@ -1,4 +1,3 @@
-from itertools import count
 import tkinter as tk
 import networkx as nx
 from rx.subjects import BehaviorSubject
