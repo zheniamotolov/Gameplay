@@ -14,7 +14,7 @@ class GraphViewerGUI:
         self._parent = parent
         self._canvas = FigureCanvasTkAgg(figure, master=parent)
         self._canvas.get_tk_widget().pack()
-        parent.wm_protocol('WM_DELETE_WINDOW', parent.quit)
+        self._parent.wm_protocol('WM_DELETE_WINDOW', parent.quit)
         self.create_menubar()
         self.create_buttons()
 
@@ -52,7 +52,7 @@ class GraphViewerGUI:
     def show_hyper4d(self):
         self._graph = nx.hypercube_graph(4)
         show_labels = False
-        self.draw(self._graph,show_labels)
+        self.draw(self._graph, show_labels)
 
     def show_planar_embedding_of_graph(self):
         if nx.check_planarity(self._graph)[0]:
