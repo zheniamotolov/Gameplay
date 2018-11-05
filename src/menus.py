@@ -43,8 +43,16 @@ def graphs(parent, G):
     def hypercube_handler():
         G.on_next(nx.hypercube_graph(4))
 
+    def cycle_handler():
+        G.on_next(nx.cycle_graph(7))
+
+    def complete_handler():
+        G.on_next(nx.complete_graph(5))
+    
     menu = tk.Menu(parent)
     menu.add_command(label='Cubical', command=cubical_handler)
     menu.add_command(label='Hypercube', command=hypercube_handler)
+    menu.add_command(label='Complete', command=complete_handler)
+    menu.add_command(label='Cycle', command=cycle_handler)
     parent.add_cascade(label='Graphs', menu=menu)
     return menu
