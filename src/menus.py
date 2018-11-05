@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from rx.subjects import Subject
 from serialization import graph_to_file, graph_from_file
-
+import networkx as nx
 
 def ask_export_filename():
     filetypes = [('JSON', '*.json'), ('All Files', '*')]
@@ -33,4 +33,18 @@ def file(parent, G):
     menu.add_command(label='Import', command=import_handler)
     menu.add_command(label='Export', command=export_handler)
     parent.add_cascade(label='File', menu=menu)
+    return menu
+
+
+def graphs(parent, G):
+    def cubical_handler():
+        G.on_next(nx.cubical_graph())
+
+    def hypercube_handler():
+        G.on_next(nx.hypercube_graph(4))
+
+    menu = tk.Menu(parent)
+    menu.add_command(label='Cubical', command=cubical_handler)
+    menu.add_command(label='Hypercube', command=hypercube_handler)
+    parent.add_cascade(label='Graphs', menu=menu)
     return menu

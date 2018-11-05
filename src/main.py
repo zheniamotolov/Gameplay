@@ -15,6 +15,7 @@ def main():
     root.wm_protocol('WM_DELETE_WINDOW', exit)
     menubar = tk.Menu(root, tearoff=0)
     menus.file(menubar, G)
+    menus.graphs(menubar,G)
     root.config(menu=menubar)
     tk.mainloop()
 
