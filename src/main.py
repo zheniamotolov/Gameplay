@@ -15,6 +15,7 @@ def main():
     menus.file(menubar, G)
     menus.view(menubar, graph_viewer)
     menus.graphs(menubar, G)
+    menus.layouts(menubar, graph_viewer)
     root.config(menu=menubar)
     tk.mainloop()
 

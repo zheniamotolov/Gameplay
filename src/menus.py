@@ -82,3 +82,20 @@ def view(parent, widget):
     menu.add_command(label='Zoom Out', command=zoom_out_handler)
     parent.add_cascade(label='View', menu=menu)
     return menu
+
+def layouts(parent, widget):
+    def spring_handler():
+        widget.layout.on_next(nx.spring_layout)
+
+    def shell_handler():
+        widget.layout.on_next(nx.shell_layout)
+
+    def spectral_handler():
+        widget.layout.on_next(nx.spectral_layout)
+
+    menu = tk.Menu(parent)
+    menu.add_command(label='Spring', command=spring_handler)
+    menu.add_command(label='Shell', command=shell_handler)
+    menu.add_command(label='Spectral', command=spectral_handler)
+    parent.add_cascade(label='Layouts', menu=menu)
+    return menu
