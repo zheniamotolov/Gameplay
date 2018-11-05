@@ -18,6 +18,8 @@ class GraphViewer:
         parent.bind('<Right>', lambda _: self._dx.on_next(0.1))
         parent.bind('<Down>', lambda _: self._dy.on_next(0.1))
         parent.bind('<Up>', lambda _: self._dy.on_next(-0.1))
+        parent.bind('<KP_Add>', lambda _: self.zoom.on_next(2))
+        parent.bind('<KP_Subtract>', lambda _: self.zoom.on_next(1/2))
         self.layout = BehaviorSubject(nx.spring_layout)
         self._G = Subject()
 
