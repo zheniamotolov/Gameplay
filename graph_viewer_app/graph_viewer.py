@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from import_handler import ImportHandler
 from export_handler import ExportHandler
 import pygraphviz as pgv
+import matplotlib.image as mpimg
 
 
 class GraphViewerGUI:
@@ -34,7 +35,7 @@ class GraphViewerGUI:
         grphs_menubar.add_command(label='Cube', command=lambda: self.show_cube())
         grphs_menubar.add_command(label='Cycle', command=lambda: self.show_cycle())
         grphs_menubar.add_command(label='Complete', command=lambda: self.show_complete())
-        grphs_menubar.add_command(label='4D hypercube', command=lambda: self.show_hyper4d())
+        # grphs_menubar.add_command(label='4D hypercube', command=lambda: self.show_hyper4d())
         menubar.add_cascade(label='Graphs', menu=grphs_menubar)
         self._parent.config(menu=menubar)
 
@@ -68,9 +69,11 @@ class GraphViewerGUI:
         a_graph.add_edges_from(self._graph.edges())
         a_graph.layout(prog='dot')
         a_graph.draw('../resources/planar.png')
-
-    # else:
-    #     print('graph is not planar')
+        plt.clf()
+        img = mpimg.imread('../resources/planar.png')
+        plt.axis('off')
+        plt.imshow(img)
+        self._canvas.draw()
 
     def draw(self, graph, show_labels=True):
         plt.clf()
