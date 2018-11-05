@@ -10,17 +10,24 @@ class GraphViewer:
         self._canvas.pack()
         self.zoom = BehaviorSubject(0.7)
         self._k = self.zoom.scan(lambda acc, curr: acc * curr)
-        self.x_center = BehaviorSubject(0.5)
-        self.y_center = BehaviorSubject(0.5)
+        self._dx = BehaviorSubject(0.5)
+        self._dy = BehaviorSubject(0.5)
+        self.x_center = self._dx.scan(lambda acc, curr: acc + curr)
+        self.y_center = self._dy.scan(lambda acc, curr: acc + curr)
+        parent.bind('<Left>', lambda _: self._dx.on_next(-0.1))
+        parent.bind('<Right>', lambda _: self._dx.on_next(0.1))
+        parent.bind('<Down>', lambda _: self._dy.on_next(0.1))
+        parent.bind('<Up>', lambda _: self._dy.on_next(-0.1))
         self.layout = BehaviorSubject(nx.spring_layout)
         self._G = Subject()
+
         def draw(G, x_center, y_center, k, layout):
             def scale(x, y):
                 width = self._canvas.winfo_width()
                 height = self._canvas.winfo_height()
                 size = min(width, height) / 2
                 x = width * x_center + size * x * k
-                y = height * x_center + size * y * k
+                y = height * y_center + size * y * k
                 return x, y
             self._canvas.delete('all')
             nodes = layout(G)
