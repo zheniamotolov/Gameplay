@@ -58,5 +58,5 @@
    `sh start.sh`
 
    для Linux: 
-  `sudo apt-get install tk-python`
-  `sh start.sh`
+   `sudo apt-get install tk-python`
+   `sh start.sh`
