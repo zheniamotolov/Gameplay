@@ -2,7 +2,7 @@ import tkinter as tk
 import networkx as nx
 from rx.subjects import BehaviorSubject
 from graph_view import GraphViewer
-import menus
+from menu import Menu
 
 
 class AppController:
@@ -13,7 +13,7 @@ class AppController:
         self.model = AppModel()
         self.view = AppView(self.root)
         self.model.G.subscribe(self.view.graph_viewer)
-        self.view.create_menu_items(self.model.G)
+        self.view.create_menu(self.model.G)
         self.root.config(menu=self.view.menubar)
 
     def run(self):
@@ -32,8 +32,6 @@ class AppView:
         self.graph_viewer = GraphViewer(master)
         self.menubar = tk.Menu(master, tearoff=0)
 
-    def create_menu_items(self, G):
-        menus.file(self.menubar, G)
-        menus.view(self.menubar, self.graph_viewer)
-        menus.graphs(self.menubar, G)
-        menus.layouts(self.menubar, self.graph_viewer)
+    def create_menu(self, G):
+        menu = Menu(self.menubar, self.graph_viewer)
+        menu.create_menu_items(G)
