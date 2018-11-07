@@ -52,3 +52,16 @@
 Обязательно продумайте наперёд архитектуру вашей программы, чтобы она была открыта для добавления новой функциональности.
 
 Удачи!
+
+## Инструкция для запуска:
+
+   для MAC OS
+    sh start.sh
+
+   для Linux
+    sudo apt-get install tk-python
+    sh start.sh
+
+## Team Members
+   Andrey(@wg-andrey) Eugene(@zheniamotolov) Vladislav(@onion-ninja)
+
