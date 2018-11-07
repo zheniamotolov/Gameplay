@@ -83,6 +83,7 @@ def view(parent, widget):
     parent.add_cascade(label='View', menu=menu)
     return menu
 
+
 def layouts(parent, widget):
     def spring_handler():
         widget.layout.on_next(nx.spring_layout)
