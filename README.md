@@ -54,13 +54,12 @@
 Удачи!
 
 ## Инструкция для запуска:
-
-   для MAC OS 
-   sh start.sh
-
-   для Linux
-   sudo apt-get install tk-python
-   sh start.sh
+   для MAC OS:  
+   `sh start.sh`
+   
+   для Linux:<br> 
+   `sudo apt-get install tk-python`<br>
+   `sh start.sh`
 
 ## Team Members
    Andrey(@wg-andrey) Eugene(@zheniamotolov) Vladislav(@onion-ninja)
