@@ -54,7 +54,7 @@
 Удачи!
 
 ## Инструкция для запуска:
-   для MAC OS:<br>  
+   для MAC OS:  
    `sh start.sh`
    
    для Linux:<br> 
