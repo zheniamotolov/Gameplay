@@ -1,6 +1,7 @@
 import tkinter as tk
 import networkx as nx
 from rx.subjects import BehaviorSubject
+
 from graph_view import GraphViewer
 from menu import Menu
 

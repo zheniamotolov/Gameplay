@@ -1,13 +1,15 @@
 import tkinter as tk
 import networkx as nx
 from rx.subjects import BehaviorSubject, Subject
+from constants import Constant
 
 
 class GraphViewer:
+
     def __init__(self, parent):
         self._parent = parent
 
-        self._canvas = tk.Canvas(parent, width=1024, height=768)
+        self._canvas = tk.Canvas(parent, width=Constant.WIDTH_OF_CANVAS, height=Constant.HEIGHT_OF_CANVAS)
         self._canvas.pack()
 
         self.zoom = BehaviorSubject(0.7)
@@ -24,7 +26,7 @@ class GraphViewer:
         parent.bind('<Down>', lambda _: self._dy.on_next(0.1))
         parent.bind('<Up>', lambda _: self._dy.on_next(-0.1))
         parent.bind('<KP_Add>', lambda _: self.zoom.on_next(2))
-        parent.bind('<KP_Subtract>', lambda _: self.zoom.on_next(1/2))
+        parent.bind('<KP_Subtract>', lambda _: self.zoom.on_next(1 / 2))
 
         self.layout = BehaviorSubject(nx.spring_layout)
         self._G = Subject()
@@ -39,6 +41,7 @@ class GraphViewer:
                 x = width * x_center + size * x * k
                 y = height * y_center + size * y * k
                 return x, y
+
             self._canvas.delete('all')
             for from_, to in edges:
                 x_from, y_from = scale(*nodes[from_])

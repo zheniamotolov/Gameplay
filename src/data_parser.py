@@ -1,4 +1,5 @@
 import json
+
 import networkx as nx
 from itertools import count
 
@@ -6,8 +7,7 @@ from itertools import count
 class DataParser:
     def graph_from_file(self, filename):
         if filename is None:
-            return
-
+            return None
         G = nx.Graph()
         with open(filename, 'r') as fp:
             data = json.load(fp)
@@ -21,7 +21,6 @@ class DataParser:
     def graph_to_file(self, G, filename):
         if filename is None:
             return
-
         points = [{'idx': node, 'post_idx': None} for node in G.nodes]
         lines = [
             {

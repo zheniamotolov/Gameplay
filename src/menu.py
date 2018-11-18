@@ -1,29 +1,14 @@
 import tkinter as tk
 from tkinter import filedialog
-from rx.subjects import Subject
-from data_parser import DataParser
 import networkx as nx
+from rx.subjects import Subject
+
+from data_parser import DataParser
 
 
 class Menu:
     def __init__(self, menubar, graph_viewer):
         self.__menubar = menubar
-        self.__graph_viewer = graph_viewer
-
-    @property
-    def menubar(self):
-        return self.__menubar
-
-    @menubar.setter
-    def menubar(self, menubar):
-        self.__menubar = menubar
-
-    @property
-    def graph_viewer(self):
-        return self.__graph_viewer
-
-    @graph_viewer.setter
-    def graph_viewer(self, graph_viewer):
         self.__graph_viewer = graph_viewer
 
     def create_menu_items(self, G):
@@ -34,7 +19,7 @@ class Menu:
 
     def ask_export_filename(self):
         filename = None
-        filetypes = [('JSON', '*.json'), ('All Files', '*')]
+        filetypes = (('JSON', '*.json'), ('All Files', '*'))
         filepath = filedialog.asksaveasfile(filetypes=filetypes)
         if filepath:
             filename = filepath.name
@@ -43,7 +28,7 @@ class Menu:
 
     def ask_import_filename(self):
         filename = None
-        filetypes = [('JSON', '*.json'), ('All Files', '*')]
+        filetypes = (('JSON', '*.json'), ('All Files', '*'))
         filepath = filedialog.askopenfile(filetypes=filetypes)
         if filepath:
             filename = filepath.name
@@ -123,3 +108,19 @@ class Menu:
         menu.add_command(label='Spectral', command=spectral_handler)
         self.menubar.add_cascade(label='Layouts', menu=menu)
         return menu
+
+    @property
+    def menubar(self):
+        return self.__menubar
+
+    @menubar.setter
+    def menubar(self, menubar):
+        self.__menubar = menubar
+
+    @property
+    def graph_viewer(self):
+        return self.__graph_viewer
+
+    @graph_viewer.setter
+    def graph_viewer(self, graph_viewer):
+        self.__graph_viewer = graph_viewer
