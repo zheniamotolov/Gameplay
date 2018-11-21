@@ -40,11 +40,11 @@ class Menu:
         import_filename = Subject()
         export_filename = Subject()
         import_filename \
-            .map(data_parser.graph_from_file) \
+            .map(data_parser.import_graph_from_file) \
             .filter(lambda i: i is not None) \
             .subscribe(G)
         pair = export_filename.with_latest_from(G, lambda x, y: (x, y))
-        pair.subscribe(lambda pair: data_parser.graph_to_file(pair[1], pair[0]))
+        pair.subscribe(lambda pair: data_parser.export_graph_to_file(pair[1], pair[0]))
 
         def import_handler():
             import_filename.on_next(self.ask_import_filename())

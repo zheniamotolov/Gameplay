@@ -5,7 +5,7 @@ from itertools import count
 
 
 class DataParser:
-    def graph_from_file(self, filename):
+    def import_graph_from_file(self, filename):
         if filename is None:
             return None
         G = nx.Graph()
@@ -18,7 +18,7 @@ class DataParser:
                 G.add_edge(from_idx, to_idx, weight=line['length'])
         return G
 
-    def graph_to_file(self, G, filename):
+    def export_graph_to_file(self, G, filename):
         if filename is None:
             return
         points = [{'idx': node, 'post_idx': None} for node in G.nodes]
