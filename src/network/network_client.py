@@ -21,6 +21,18 @@ def request(func):
     return wrapper_request
 
 
+def disconnect(func):
+    @functools.wraps(func)
+    async def wrapper_disconnect(self, *args, **kwargs):
+        value = await func(self, *args, **kwargs)
+
+        self.writer.close()
+        await self.writer.wait_closed()
+
+        return value
+    return wrapper_disconnect
+
+
 class NetworkClient:
     SERVER_HOST = 'wgforge-srv.wargaming.net'
     SERVER_PORT = 443
@@ -62,16 +74,10 @@ class NetworkClient:
         response_message = await self.read_message()
         return response_message
 
+    @disconnect
+    @request
     async def logout(self):
-        request_message = ActionMessage(Action.LOGOUT)
-        await self.write_message(request_message)
-
-        response_message = await self.read_message()
-
-        self.writer.close()
-        await self.writer.wait_closed()
-
-        return response_message
+        return ActionMessage(Action.LOGOUT)
 
     @request
     async def move_train(self, line_idx, speed, train_idx):
