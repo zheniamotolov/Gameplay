@@ -39,73 +39,44 @@ class Menu:
         data_parser = DataParser()
         import_filename = Subject()
         export_filename = Subject()
+
         import_filename \
             .map(data_parser.import_graph_from_file) \
             .filter(lambda i: i is not None) \
             .subscribe(G)
+
         pair = export_filename.with_latest_from(G, lambda x, y: (x, y))
         pair.subscribe(lambda pair: data_parser.export_graph_to_file(pair[1], pair[0]))
 
-        def import_handler():
-            import_filename.on_next(self.ask_import_filename())
-
-        def export_handler():
-            export_filename.on_next(self.ask_export_filename())
-
         menu = tk.Menu(self.menubar)
-        menu.add_command(label='Import', command=import_handler)
-        menu.add_command(label='Export', command=export_handler)
+
+        menu.add_command(label='Import', command=lambda: import_filename.on_next(self.ask_import_filename()))
+        menu.add_command(label='Export', command=lambda: export_filename.on_next(self.ask_export_filename()))
         self.menubar.add_cascade(label='File', menu=menu)
         return menu
 
     def show_graphs(self, G):
-        def cubical_handler():
-            G.on_next(nx.cubical_graph())
-
-        def hypercube_handler():
-            G.on_next(nx.hypercube_graph(4))
-
-        def cycle_handler():
-            G.on_next(nx.cycle_graph(7))
-
-        def complete_handler():
-            G.on_next(nx.complete_graph(5))
-
         menu = tk.Menu(self.menubar)
-        menu.add_command(label='Cubical', command=cubical_handler)
-        menu.add_command(label='Hypercube', command=hypercube_handler)
-        menu.add_command(label='Complete', command=complete_handler)
-        menu.add_command(label='Cycle', command=cycle_handler)
+        menu.add_command(label='Cubical', command=lambda: G.on_next(nx.cubical_graph()))
+        menu.add_command(label='Hypercube', command=lambda: G.on_next(nx.hypercube_graph(4)))
+        menu.add_command(label='Complete', command=lambda: G.on_next(nx.complete_graph(5)))
+        menu.add_command(label='Cycle', command=lambda: G.on_next(nx.cycle_graph(7)))
         self.menubar.add_cascade(label='Graphs', menu=menu)
         return menu
 
     def create_view_submenu(self):
-        def zoom_in_handler():
-            self.graph_viewer.zoom.on_next(2)
-
-        def zoom_out_handler():
-            self.graph_viewer.zoom.on_next(0.5)
-
         menu = tk.Menu(self.menubar)
-        menu.add_command(label='Zoom In', command=zoom_in_handler)
-        menu.add_command(label='Zoom Out', command=zoom_out_handler)
+        menu.add_command(label='Zoom In', command=lambda: self.graph_viewer.zoom.on_next(2))
+        menu.add_command(label='Zoom Out', command=lambda: self.graph_viewer.zoom.on_next(2)
+                         )
         self.menubar.add_cascade(label='View', menu=menu)
         return menu
 
     def layouts(self):
-        def spring_handler():
-            self.graph_viewer.layout.on_next(nx.spring_layout)
-
-        def shell_handler():
-            self.graph_viewer.layout.on_next(nx.shell_layout)
-
-        def spectral_handler():
-            self.graph_viewer.layout.on_next(nx.spectral_layout)
-
         menu = tk.Menu(self.menubar)
-        menu.add_command(label='Spring', command=spring_handler)
-        menu.add_command(label='Shell', command=shell_handler)
-        menu.add_command(label='Spectral', command=spectral_handler)
+        menu.add_command(label='Spring', command=lambda: self.graph_viewer.layout.on_next(nx.spring_layout))
+        menu.add_command(label='Shell', command=lambda: self.graph_viewer.layout.on_next(nx.shell_layout))
+        menu.add_command(label='Spectral', command=lambda: self.graph_viewer.layout.on_next(nx.spectral_layout))
         self.menubar.add_cascade(label='Layouts', menu=menu)
         return menu
 

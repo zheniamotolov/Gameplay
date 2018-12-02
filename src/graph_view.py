@@ -1,15 +1,15 @@
 import tkinter as tk
 import networkx as nx
 from rx.subjects import BehaviorSubject, Subject
-from constants import Constant
+
+from src.constants import *
 
 
 class GraphViewer:
-
     def __init__(self, parent):
         self._parent = parent
 
-        self._canvas = tk.Canvas(parent, width=Constant.WIDTH_OF_CANVAS, height=Constant.HEIGHT_OF_CANVAS)
+        self._canvas = tk.Canvas(parent, width=WIDTH_OF_CANVAS, height=HEIGHT_OF_CANVAS)
         self._canvas.pack()
 
         self.zoom = BehaviorSubject(0.7)
